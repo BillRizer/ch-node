@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  app:
+    container_name: app
+    build:
+      context: "./app"
+    
+    volumes:
+      - ./app:/app
+    environment:
+        - DATABASE_HOST=database
+        - DATABASE_PORT=3306
+        - DATABASE_USER=root
+        - DATABASE_PASS=pass
+        - DATABASE_NAME=app
+
+  database:
+    container_name: database
+    build:
+      context: "."
+      dockerfile: mysql/Dockerfile
+    restart: always
+    volumes:
+      - database:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: app
+
+  reverse_proxy:
+    container_name: reverse_proxy
+    build:
+      context: "."
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - "8080:8080"
+  # db_seeder:
+  #   image: mysql:latest
+  #   volumes:
+  #     - ./mysql/setup.sql:/setup.sql
+  #   environment:
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+  #   entrypoint: [ "bash", "-c", "sleep 10 && mysql --user=root --host=database --port=3306 app < /setup.sql && exit"] 
+  #   depends_on:
+  #     - database
+volumes:
+  database:
