@@ -2,11 +2,13 @@ FROM node
 
 WORKDIR /app/
 
-COPY package.json .
+COPY package.* .
 
 RUN npm install
 
-COPY ./src .
+COPY ./src ./src
+
+RUN ls 
 
 CMD ["npm","run","start"]
 # CMD "/bin/bash"

@@ -1,12 +1,14 @@
 version: "3.8"
 services:
   app:
-    container_name: app
-    build:
-      context: "./app"
-    
+    # container_name: app
+    # build:
+    #   context: "./app"
+    image: tel33z/fullcycle:latest
+    depends_on:
+      - database
     volumes:
-      - ./app:/app
+      - data_app:/app
     environment:
         - DATABASE_HOST=database
         - DATABASE_PORT=3306
@@ -46,3 +48,4 @@ services:
   #     - database
 volumes:
   database:
+  data_app:
